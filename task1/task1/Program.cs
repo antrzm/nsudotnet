@@ -5,11 +5,12 @@ namespace task1 {
         public static void Main(string[] args) {
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.WriteLine("Please, write a date in dd.mm.yyyy format:");
-            var date = Console.ReadLine();
             try {
-                var day = int.Parse(date.Split('.')[0]);
-                var month = int.Parse(date.Split('.')[1]);
-                var year = int.Parse(date.Split('.')[2]);
+                var splitDate = Console.ReadLine().Split('.');
+                if (splitDate.Length != 3) throw new FormatException();
+                var day = int.Parse(splitDate[0]);
+                var month = int.Parse(splitDate[1]);
+                var year = int.Parse(splitDate[2]);
 
                 if (day > DateTime.DaysInMonth(year, month)) throw new FormatException();
                 if (day > 31 || day < 1 || month > 12 || month < 1 || year < 0) throw new FormatException();
@@ -21,8 +22,8 @@ namespace task1 {
 
                 var userMonthTime = new DateTime(year, month, 1);
                 if (userMonthTime.DayOfWeek != DayOfWeek.Monday)
-                    for (var i = 0; i < userMonthTime.DayOfWeek - DayOfWeek.Monday; i++)
-                        Console.Write("    ");        //skipping empty days
+                    for (var i = 0; i < Math.Abs(userMonthTime.DayOfWeek - DayOfWeek.Monday); i++)
+                        Console.Write("    "); //skipping empty days
                 var weekendsCounter = 0;
                 for (;;) {
                     if (userMonthTime.DayOfWeek == DayOfWeek.Sunday ||
@@ -43,15 +44,14 @@ namespace task1 {
             }
             catch (FormatException) {
                 Console.WriteLine("Wrong format");
-                return;
             }
             catch (ArgumentOutOfRangeException) {
                 Console.WriteLine("Wrong format");
-                return;
             }
-
-            Console.WriteLine("\nPress any key to exit...");
-            Console.ReadLine();
+            finally {
+                Console.WriteLine("\nPress any key to exit...");
+                Console.ReadLine();
+            }
         }
     }
 }
